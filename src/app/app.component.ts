@@ -16,7 +16,7 @@ import { Product } from './models/product.model';
 import { CatalogService } from './services/catalog.service';
 import { SelectionService } from './services/selection.service';
 import { ProductCardComponent } from './components/product-card/product-card.component';
-import { WhatsappBarComponent } from './components/whatsapp-bar/whatsapp-bar.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 const ROW_GAP = 32;
 const CARD_HEIGHT = 472;
@@ -27,7 +27,7 @@ const CARD_HEIGHT = 472;
   imports: [
     ScrollingModule,
     ProductCardComponent,
-    WhatsappBarComponent
+    ChatComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

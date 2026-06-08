@@ -50,7 +50,7 @@ src/
 │   ├── components/
 │   │   ├── lazy-img/                  # IntersectionObserver image + skeleton
 │   │   ├── product-card/              # Card (image, meta, select)
-│   │   └── whatsapp-bar/              # Sticky bottom tray + wa.me link builder
+│   │   └── chat/                      # Sticky bottom tray + wa.me link builder
 │   └── app.component.*                # Shell: hero + controls + virtual grid
 ├── styles.scss                        # Design tokens (DESIGN-2)
 └── index.html                         # Fonts + meta
