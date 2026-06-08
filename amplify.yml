@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    # Angular outputs the SPA to dist/<project>/browser
+    baseDirectory: dist/furniture-showcase/browser
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
