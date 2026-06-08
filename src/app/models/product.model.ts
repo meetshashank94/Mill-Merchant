@@ -19,7 +19,7 @@ export interface Product {
   mrp?: number;
   /** Image key/filename resolved against S3_IMAGE_BASE_URL. */
   image: string;
-  /** Dimensions, e.g. "210 × 90 × 85 cm (W×D×H)". */
+  /** Dimensions, e.g. "210 * 90 * 85 cm (W*D*H)". */
   dimensions: string;
   /** Available size/variant labels, e.g. ["2-seater", "3-seater"]. */
   sizes: string[];
