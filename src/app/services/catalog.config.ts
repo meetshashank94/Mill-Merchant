@@ -22,10 +22,9 @@ export const CATALOG_URL = new InjectionToken<string>('CATALOG_URL', {
 
 /**
  * Destination WhatsApp number in international format WITHOUT the leading `+`
- * (wa.me requirement), e.g. `919999999999`. This is a placeholder — replace
- * with the sales line before going live.
+ * (wa.me requirement), e.g. `919205261441`.
  */
 export const WHATSAPP_NUMBER = new InjectionToken<string>('WHATSAPP_NUMBER', {
   providedIn: 'root',
-  factory: () => '910000000000'
+  factory: () => '919205261441'
 });
