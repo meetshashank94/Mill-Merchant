@@ -4,12 +4,12 @@ import { SelectionService } from '../../services/selection.service';
 import { WHATSAPP_NUMBER } from '../../services/catalog.config';
 
 @Component({
-  selector: 'app-whatsapp-bar',
+  selector: 'app-chat',
   standalone: true,
-  templateUrl: './whatsapp-bar.component.html',
-  styleUrl: './whatsapp-bar.component.scss'
+  templateUrl: './chat.component.html',
+  styleUrl: './chat.component.scss'
 })
-export class WhatsappBarComponent {
+export class ChatComponent {
   /** Full catalog, used to resolve selected ids to product details. */
   readonly products = input.required<Product[]>();
 
