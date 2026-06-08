@@ -1,0 +1,68 @@
+name: Deploy to S3 + CloudFront
+
+# Builds the SPA and deploys it to S3, then invalidates the CloudFront cache.
+# Uses GitHub OIDC to assume an AWS role — no long-lived AWS access keys stored.
+#
+# Configure in the repo settings:
+#   Secrets:
+#     AWS_DEPLOY_ROLE_ARN          IAM role ARN that trusts this repo via OIDC
+#   Variables:
+#     AWS_REGION                   e.g. ap-south-1
+#     S3_BUCKET                    target bucket name
+#     CLOUDFRONT_DISTRIBUTION_ID   CloudFront distribution id
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # required for OIDC
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      S3_BUCKET: ${{ vars.S3_BUCKET }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Sync to S3
+        run: |
+          DIST=dist/furniture-showcase/browser
+          # Fingerprinted JS/CSS/images: cache hard.
+          aws s3 sync "$DIST" "s3://$S3_BUCKET" --delete \
+            --cache-control "public,max-age=31536000,immutable" \
+            --exclude index.html --exclude "data/*"
+          # Entry point + catalog data: never cache so updates appear immediately.
+          aws s3 cp "$DIST/index.html" "s3://$S3_BUCKET/index.html" \
+            --cache-control "no-cache"
+          aws s3 cp "$DIST/data" "s3://$S3_BUCKET/data" --recursive \
+            --cache-control "no-cache"
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
+            --paths "/index.html" "/data/*"
