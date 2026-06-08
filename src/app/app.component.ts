@@ -19,7 +19,7 @@ import { ProductCardComponent } from './components/product-card/product-card.com
 import { ChatComponent } from './components/chat/chat.component';
 
 const ROW_GAP = 32;
-const CARD_HEIGHT = 472;
+const CARD_HEIGHT = 540;
 
 @Component({
   selector: 'app-root',
