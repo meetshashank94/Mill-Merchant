@@ -3,17 +3,22 @@ import {
   computed,
   HostListener,
   inject,
+  NgZone,
+  OnDestroy,
   OnInit,
-  signal
+  signal,
+  ViewChild
 } from '@angular/core';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
+import { Subscription } from 'rxjs';
+import { auditTime } from 'rxjs/operators';
 import { Product } from './models/product.model';
 import { CatalogService } from './services/catalog.service';
 import { SelectionService } from './services/selection.service';
 import { ProductCardComponent } from './components/product-card/product-card.component';
 import { WhatsappBarComponent } from './components/whatsapp-bar/whatsapp-bar.component';
 
-const ROW_GAP = 24;
+const ROW_GAP = 32;
 const CARD_HEIGHT = 472;
 
 @Component({
@@ -27,15 +32,40 @@ const CARD_HEIGHT = 472;
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   private readonly catalog = inject(CatalogService);
   private readonly selection = inject(SelectionService);
+  private readonly zone = inject(NgZone);
 
   protected readonly products = signal<Product[]>([]);
   protected readonly loading = signal(true);
   protected readonly category = signal<string>('All');
   protected readonly search = signal<string>('');
   protected readonly cols = signal<number>(this.columnsForWidth(this.viewportWidth()));
+  protected readonly condensed = signal(false);
+
+  private scrollSub?: Subscription;
+  private vp?: CdkVirtualScrollViewport;
+
+  /** Bind to the virtual viewport once it exists; collapse the hero on scroll. */
+  @ViewChild(CdkVirtualScrollViewport)
+  set viewportRef(vp: CdkVirtualScrollViewport | undefined) {
+    this.scrollSub?.unsubscribe();
+    this.vp = vp;
+    if (!vp) {
+      return;
+    }
+    this.scrollSub = vp
+      .elementScrolled()
+      .pipe(auditTime(60))
+      .subscribe(() => {
+        const offset = vp.measureScrollOffset('top');
+        const next = offset > 24;
+        if (next !== this.condensed()) {
+          this.zone.run(() => this.condensed.set(next));
+        }
+      });
+  }
 
   protected readonly selectedCount = this.selection.count;
   protected readonly rowGap = ROW_GAP;
@@ -86,6 +116,10 @@ export class AppComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.scrollSub?.unsubscribe();
+  }
+
   @HostListener('window:resize')
   onResize(): void {
     const next = this.columnsForWidth(this.viewportWidth());
@@ -99,6 +133,7 @@ export class AppComponent implements OnInit {
 
   protected selectCategory(cat: string): void {
     this.category.set(cat);
+    this.scrollToTop();
   }
 
   protected onSearch(value: string): void {
@@ -108,6 +143,12 @@ export class AppComponent implements OnInit {
   protected reset(): void {
     this.category.set('All');
     this.search.set('');
+    this.scrollToTop();
+  }
+
+  private scrollToTop(): void {
+    this.vp?.scrollToOffset(0);
+    this.condensed.set(false);
   }
 
   private viewportWidth(): number {
