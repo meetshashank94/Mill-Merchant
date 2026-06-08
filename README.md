@@ -27,7 +27,7 @@ Open [http://localhost:4400](http://localhost:4400).
 |-------|---------|---------|
 | `S3_IMAGE_BASE_URL` | `assets/products` | Image CDN/bucket base URL |
 | `CATALOG_URL` | `data/products.json` | Catalog JSON endpoint |
-| `WHATSAPP_NUMBER` | `910000000000` | Destination WhatsApp number (without `+`) |
+| `WHATSAPP_NUMBER` | `919205261441` | Destination WhatsApp number (without `+`) |
 
 Override in `src/app/app.config.ts` providers to swap values.
 
@@ -146,6 +146,5 @@ npx ng test --watch=false  # unit tests (ChromeHeadless)
 
 ## Notes
 
-- **WhatsApp number** is a placeholder — replace `910000000000` with the real sales line before go-live.
 - **Images** are currently generated color-block placeholders. Replace files in `public/assets/products/` or point `S3_IMAGE_BASE_URL` to your CDN after uploading real photos.
 - The catalog is intentionally small (≤40 items) for a link-shared lead-gen page, not a full e-commerce store.
