@@ -1,0 +1,15 @@
+[build]
+  command = "npm run build"
+  # Angular outputs the SPA to dist/<project>/browser
+  publish = "dist/furniture-showcase/browser"
+
+[build.environment]
+  # Required by @netlify/angular-runtime (needs Node >= 22.22).
+  NODE_VERSION = "22.22.0"
+
+# SPA fallback: serve index.html for client-side routes so deep links / refreshes
+# don't 404. Status 200 = rewrite (URL stays put), not a redirect.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
