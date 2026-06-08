@@ -1,0 +1,20 @@
+<div #host class="lazy-img" [class.is-loaded]="loaded()">
+  @if (!loaded()) {
+    <div class="skeleton" aria-hidden="true"></div>
+  }
+  @if (visible() && !errored()) {
+    <img
+      [src]="src()"
+      [alt]="alt()"
+      loading="lazy"
+      decoding="async"
+      (load)="onLoad()"
+      (error)="onError()"
+    />
+  }
+  @if (errored()) {
+    <div class="img-fallback" aria-hidden="true">
+      <span>Image unavailable</span>
+    </div>
+  }
+</div>

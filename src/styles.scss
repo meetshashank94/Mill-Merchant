@@ -1,1 +1,84 @@
-/* You can add global styles to this file, and also import other style files */
+/* Mill & Merchant — global tokens (DESIGN-2: Shopifi two-canvas system) */
+
+:root {
+  /* canvas + ink */
+  --canvas-night: #000000;
+  --canvas-night-elevated: #0a0a0a;
+  --canvas-light: #ffffff;
+  --canvas-cream: #fbfbf5;
+  --surface-elevated-dark: #1e2c31;
+  --ink: #000000;
+  --on-primary: #ffffff;
+  --on-dark: #ffffff;
+
+  /* shades */
+  --shade-30: #d4d4d8;
+  --shade-40: #a1a1aa;
+  --shade-50: #71717a;
+  --shade-60: #52525b;
+  --shade-70: #3f3f46;
+  --hairline-light: #e4e4e7;
+  --hairline-dark: #1e2c31;
+
+  /* accents (light track only) */
+  --aloe-10: #c1fbd4;
+  --pistachio-10: #d4f9e0;
+  --link-cool-1: #9dabad;
+  --link-cool-2: #9797a2;
+  --link-cool-3: #bdbdca;
+  --link-mint: #99b3ad;
+
+  /* radii */
+  --r-xs: 4px;
+  --r-sm: 5px;
+  --r-md: 8px;
+  --r-lg: 12px;
+  --r-xl: 20px;
+  --r-pill: 9999px;
+
+  /* spacing */
+  --s-xxs: 2px;
+  --s-xs: 4px;
+  --s-sm: 8px;
+  --s-md: 12px;
+  --s-lg: 16px;
+  --s-xl: 24px;
+  --s-xxl: 32px;
+  --s-huge: 64px;
+
+  /* type families */
+  --font-display: 'Inter Tight', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--canvas-light);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
+button {
+  font-family: var(--font-body);
+}

@@ -1,59 +1,73 @@
-# FurnitureShowcase
+# Mill & Merchant — Furniture Showcase SPA
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.27.
+A product-showcase single-page app built with **Angular 19** for WhatsApp-based lead generation. Browse handcrafted furniture, select pieces, and send an enquiry straight to WhatsApp with product context pre-filled.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- **Static JSON catalog** (~36 furniture items across 7 categories). Edit `public/data/products.json` and redeploy to update.
+- **CDK virtual scroll** for smooth performance on 30–40+ item catalogs.
+- **Lazy-loaded images** with shimmer skeleton placeholders (IntersectionObserver-based).
+- **Multi-select** products → sticky WhatsApp tray builds a `wa.me` deep link with item details pre-filled for the sales executive.
+- **AWS S3-ready** image serving: `S3_IMAGE_BASE_URL` injection token resolves image keys to any CDN/bucket. Defaults to local placeholders.
+- **Mobile-first responsive** (1 col phone → 2 tablet → 3–4 desktop).
+- **Shopifi-inspired design** (DESIGN-2): cinematic dark hero, cream canvas grid, pill-only buttons, Inter Tight display + Inter body.
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Quick start
 
 ```bash
-ng generate component component-name
+npm install
+npx ng serve --port 4400
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Open [http://localhost:4400](http://localhost:4400).
+
+## Configuration
+
+| Token | Default | Purpose |
+|-------|---------|---------|
+| `S3_IMAGE_BASE_URL` | `assets/products` | Image CDN/bucket base URL |
+| `CATALOG_URL` | `data/products.json` | Catalog JSON endpoint |
+| `WHATSAPP_NUMBER` | `910000000000` | Destination WhatsApp number (without `+`) |
+
+Override in `src/app/app.config.ts` providers to swap values.
+
+## Updating the catalog
+
+1. Edit `public/data/products.json` (add/remove/modify product objects).
+2. Upload corresponding images to your S3 bucket (or `public/assets/products/` for local dev).
+3. Redeploy.
+
+## Project structure
+
+```
+src/
+├── app/
+│   ├── models/product.model.ts        # Product interface
+│   ├── services/
+│   │   ├── catalog.config.ts          # DI tokens (S3_IMAGE_BASE_URL, WHATSAPP_NUMBER)
+│   │   ├── catalog.service.ts         # Loads + caches products JSON
+│   │   └── selection.service.ts       # Signal-based multi-select (localStorage)
+│   ├── components/
+│   │   ├── lazy-img/                  # IntersectionObserver image + skeleton
+│   │   ├── product-card/              # Card (image, meta, select)
+│   │   └── whatsapp-bar/              # Sticky bottom tray + wa.me link builder
+│   └── app.component.*                # Shell: hero + controls + virtual grid
+├── styles.scss                        # Design tokens (DESIGN-2)
+└── index.html                         # Fonts + meta
+public/
+├── data/products.json                 # Seed catalog (edit to update)
+└── assets/products/                   # Placeholder images (swap with S3)
+```
+
+## Build
 
 ```bash
-ng generate --help
+npx ng build          # production bundle → dist/furniture-showcase
+npx ng test --watch=false  # unit tests (ChromeHeadless)
 ```
 
-## Building
+## Notes
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **WhatsApp number** is a placeholder — replace `910000000000` with the real sales line before go-live.
+- **Images** are currently generated color-block placeholders. Replace files in `public/assets/products/` or point `S3_IMAGE_BASE_URL` to your CDN after uploading real photos.
+- The catalog is intentionally small (≤40 items) for a link-shared lead-gen page, not a full e-commerce store.

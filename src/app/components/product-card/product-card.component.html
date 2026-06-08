@@ -1,0 +1,49 @@
+@let p = product();
+<article class="card" [class.is-selected]="selected()">
+  <div class="media">
+    <app-lazy-img [src]="imageUrl()" [alt]="p.name" />
+    @if (p.tag) {
+      <span class="pill-tag">{{ p.tag }}</span>
+    }
+    @if (!p.inStock) {
+      <span class="pill-tag pill-tag--muted">Made to order</span>
+    }
+  </div>
+
+  <div class="body">
+    <p class="eyebrow">{{ p.category }}</p>
+    <h3 class="name">{{ p.name }}</h3>
+    <p class="desc">{{ p.description }}</p>
+
+    <div class="meta">
+      <span class="meta-row"><span class="meta-k">Size</span>{{ p.dimensions }}</span>
+      <span class="meta-row"><span class="meta-k">Material</span>{{ p.material }}</span>
+    </div>
+
+    @if (p.sizes.length) {
+      <div class="sizes">
+        @for (s of p.sizes; track s) {
+          <span class="size-chip">{{ s }}</span>
+        }
+      </div>
+    }
+
+    <div class="foot">
+      <div class="price">
+        <span class="price-now">₹{{ p.price | number }}</span>
+        @if (p.mrp && p.mrp > p.price) {
+          <span class="price-mrp">₹{{ p.mrp | number }}</span>
+        }
+      </div>
+      <button
+        type="button"
+        class="btn-select"
+        [class.is-on]="selected()"
+        [attr.aria-pressed]="selected()"
+        (click)="toggle()"
+      >
+        {{ selected() ? '✓ Selected' : 'Select' }}
+      </button>
+    </div>
+  </div>
+</article>
